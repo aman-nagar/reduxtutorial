@@ -22,7 +22,8 @@ export default function Product({ productId, title, rating, price, imageUrl }) {
         <button
           onClick={() => {
             dispatch(
-              addCartItem({ productId, title, rating, price, imageUrl })
+              // addCartItem({ productId, title, rating, price, imageUrl })
+              addCartItem({ productId })
             );
           }}
         >

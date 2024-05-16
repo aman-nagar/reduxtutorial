@@ -1,29 +1,38 @@
-import React, { useEffect } from "react";
-import { Link } from "react-router-dom";
-import CartIcon from "../assets/cart-icon.svg";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useEffect } from 'react'
+import { Link } from 'react-router-dom'
+import CartIcon from '../assets/cart-icon.svg'
+import { useDispatch, useSelector } from 'react-redux'
 import {
   fetchProducts,
   fetchProductsError,
   updateAllProducts,
-} from "../store/slices/productsSlice";
+} from '../store/slices/productsSlice'
+import { fetchCartItems, fetchCartItemsError, loadCartItems } from '../store/slices/cartSlice'
 
 export default function Header() {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch()
   useEffect(() => {
-    dispatch(fetchProducts());
-    fetch("https://fakestoreapi.com/products")
+    dispatch(fetchProducts())
+    fetch('https://fakestoreapi.com/products')
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
-        dispatch(updateAllProducts(data));
+        dispatch(updateAllProducts(data))
       })
       .catch(() => {
-        dispatch(fetchProductsError());
-      });
-  }, []);
+        dispatch(fetchProductsError())
+      })
 
-  const cartItems = useSelector((state) => state.cartItems);
+    dispatch(fetchCartItems())
+    fetch('https://fakestoreapi.com/carts/5')
+      .then((res) => res.json())
+      .then((data) => {
+        dispatch(loadCartItems(data))
+      })
+      .catch(() => {
+        dispatch(fetchCartItemsError())
+      })
+  }, [])
+  const cartItems = useSelector((state) => state.cartItems.list)
   return (
     <header>
       <div className="header-contents">
@@ -41,5 +50,5 @@ export default function Header() {
         </Link>
       </div>
     </header>
-  );
+  )
 }

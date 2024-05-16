@@ -1,11 +1,10 @@
-// CartItem.jsx
-import React from "react";
+import React from 'react'
+import { useDispatch } from 'react-redux'
 import {
   decreaseCartItemQuantity,
   increaseCartItemQuantity,
   removeCartItem,
-} from "../store/slices/cartSlice";
-import { useDispatch } from "react-redux";
+} from '../store/slices/cartSlice'
 
 export default function CartItem({
   productId,
@@ -15,7 +14,7 @@ export default function CartItem({
   imageUrl,
   quantity,
 }) {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch()
   return (
     <div className="cart-item-container">
       <div className="cart-item">
@@ -27,20 +26,16 @@ export default function CartItem({
       </div>
       <div className="item-price">${price}</div>
       <div className="item-quantity">
-        <button
-          onClick={() => dispatch(decreaseCartItemQuantity({ productId }))}
-        >
+        <button onClick={() => dispatch(decreaseCartItemQuantity({productId}))}>
           -
         </button>
         <span>{quantity}</span>
-        <button
-          onClick={() => dispatch(increaseCartItemQuantity({ productId }))}
-        >
+        <button onClick={() => dispatch(increaseCartItemQuantity({productId}))}>
           +
         </button>
         <button
           onClick={() => {
-            dispatch(removeCartItem({ productId }));
+            dispatch(removeCartItem({productId}))
           }}
         >
           Remove
@@ -48,5 +43,5 @@ export default function CartItem({
       </div>
       <div className="item-total">${quantity * price}</div>
     </div>
-  );
+  )
 }
