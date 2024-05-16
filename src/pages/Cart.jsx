@@ -1,16 +1,16 @@
-import React from 'react'
-import CartItem from '../components/CartItem'
-import { useSelector } from 'react-redux'
+import React from "react";
+import CartItem from "../components/CartItem";
+import { useSelector } from "react-redux";
 import {
   getAllCartItems,
   getCartError,
   getCartLoadingState,
-} from '../store/slices/cartSlice'
+} from "../store/slices/cartSlice";
 
 export default function Cart() {
-  const cartItems = useSelector(getAllCartItems)
-  const isLoading = useSelector(getCartLoadingState)
-  const error = useSelector(getCartError)
+  const cartItems = useSelector(getAllCartItems);
+  const isLoading = useSelector(getCartLoadingState);
+  const error = useSelector(getCartError);
   return (
     <div className="cart-container">
       <h2>Items in Your Cart</h2>
@@ -22,9 +22,9 @@ export default function Cart() {
           <div className="total">Total</div>
         </div>
         {isLoading ? (
-          <h1 style={{ textAlign: 'center' }}>Loading...</h1>
+          <h1 style={{ textAlign: "center" }}>Loading...</h1>
         ) : error ? (
-          <h2 style={{ textAlign: 'center' }}>{error}</h2>
+          <h2 style={{ textAlign: "center" }}>{error}</h2>
         ) : (
           cartItems.map(({ id, title, rating, price, image, quantity }) => (
             <CartItem
@@ -56,5 +56,5 @@ export default function Cart() {
         </div>
       </div>
     </div>
-  )
+  );
 }

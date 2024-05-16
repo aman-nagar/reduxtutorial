@@ -1,9 +1,25 @@
-import { createSelector, createSlice } from "@reduxjs/toolkit";
+import {
+  createAsyncThunk,
+  createSelector,
+  createSlice,
+} from "@reduxjs/toolkit";
 
 const findItemIndex = (state, action) =>
   state.findIndex(
     (cartItem) => cartItem.productId === action.payload.productId
   );
+
+export const fetchCartItemsData = createAsyncThunk(
+  "cart/fetchCartItems",
+  async () => {
+    try {
+      const response = await fetch(`https://fakestoreapi.com/carts/5`);
+      return response.json();
+    } catch (err) {
+      throw err;
+    }
+  }
+);
 
 const slice = createSlice({
   name: "cart",
@@ -13,17 +29,6 @@ const slice = createSlice({
     error: "",
   },
   reducers: {
-    fetchCartItems(state) {
-      state.loading = true;
-    },
-    fetchCartItemsError(state, action) {
-      state.loading = false;
-      state.error = action.payload || "Something went wrong!";
-    },
-    loadCartItems(state, action) {
-      state.loading = false;
-      state.list = action.payload.products;
-    },
     addCartItem(state, action) {
       const existingItemIndex = findItemIndex(state.list, action);
       if (existingItemIndex !== -1) state.list[existingItemIndex].quantity += 1;
@@ -44,6 +49,20 @@ const slice = createSlice({
         state.list.splice(existingItemIndex, 1);
     },
   },
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchCartItemsData.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(fetchCartItemsData.fulfilled, (state, action) => {
+        state.loading = false;
+        state.list = action.payload.products;
+      })
+      .addCase(fetchCartItemsData.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Something went wrong!";
+      });
+  },
 });
 
 const getCartItems = ({ products, cartItems }) => {
@@ -61,13 +80,10 @@ export const getAllCartItems = createSelector(
   getCartItems,
   (cartItems) => cartItems
 );
-export const getCartLoadingState = (state) => state.products.loading;
-export const getCartError = (state) => state.products.error;
+export const getCartLoadingState = (state) => state.cartItems.loading;
+export const getCartError = (state) => state.cartItems.error;
 
 export const {
-  fetchCartItemsError,
-  fetchCartItems,
-  loadCartItems,
   addCartItem,
   removeCartItem,
   increaseCartItemQuantity,
